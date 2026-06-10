@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WATCHMEN: DOOMSDAY CLOCK</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Press+Start+2P&display=swap');
+    body { font-family: 'Press Start 2P', system-ui; background: #0a0a0a; color: #ffcc00; }
+    .clock-face {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+      border: 16px solid #ffcc00;
+      box-shadow: 0 0 60px #ff0000, inset 0 0 40px #440000;
+    }
+    .hand { transition: transform 1s cubic-bezier(0.4, 0.0, 0.2, 1); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden relative">
+  <div class="absolute inset-0 bg-[radial-gradient(#ff000033_1px,transparent_1px)] [background-size:50px_50px] opacity-30"></div>
+  
+  <header class="text-center mb-8 z-10">
+    <h1 class="text-5xl md:text-7xl font-bold tracking-widest flex items-center gap-4 justify-center">
+      <span class="text-red-600">WATCHMEN</span>
+      <span class="text-yellow-400">DOOMSDAY</span>
+    </h1>
+    <p class="text-xl text-red-500 mt-2 tracking-[4px]">IT IS 85 SECONDS TO MIDNIGHT</p>
+  </header>
+
+  <div class="relative mb-12">
+    <div id="clock" class="clock-face rounded-full mx-auto flex items-center justify-center relative">
+      <div class="absolute w-4 h-4 bg-red-600 rounded-full z-20 shadow-[0_0_30px_#ff0000]"></div>
+      <div id="hand" class="hand absolute w-2 bg-red-600 origin-bottom rounded-full" 
+           style="height: 140px; left: 50%; top: 50%; transform: rotate(-75deg); margin-left: -2px; margin-top: -140px;"></div>
+      <div class="absolute inset-0 rounded-full border-8 border-yellow-400/30"></div>
+    </div>
+    <div class="text-center mt-6">
+      <div id="seconds-display" class="text-6xl font-bold text-red-500 font-mono">85</div>
+      <div class="text-yellow-300 text-sm tracking-widest">SECONDS TO MIDNIGHT</div>
+    </div>
+  </div>
+
+  <div class="max-w-2xl w-full bg-black/80 border border-yellow-400/50 p-6 rounded-xl shadow-2xl">
+    <h2 class="text-2xl mb-4 flex items-center gap-3">
+      <i class="fas fa-newspaper"></i> GLOBAL THREATS (LIVE)
+    </h2>
+    <div id="news-feed" class="space-y-4 text-sm"></div>
+    <button onclick="refreshNews()" class="mt-6 px-6 py-3 bg-red-600 hover:bg-red-700 transition-colors text-white text-xs tracking-widest">REFRESH THREATS →</button>
+  </div>
+
+  <footer class="mt-12 text-xs text-yellow-400/60 text-center">
+    Bulletin of the Atomic Scientists • 2026 • 85 seconds to midnight
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    function animateClock() {
+      const hand = document.getElementById('hand');
+      let angle = -75;
+      setInterval(() => {
+        angle += 0.3;
+        if (angle > 90) angle = -75;
+        hand.style.transform = `rotate(${angle}deg)`;
+      }, 800);
+    }
+
+    const threats = [
+      "Nuclear tensions escalate: New START treaty expired",
+      "AI safety concerns grow as models hallucinate in critical systems",
+      "Record-breaking heatwaves and extreme weather events",
+      "Geopolitical conflicts intensify",
+      "Biosecurity risks from advanced biotech"
+    ];
+
+    function renderNews() {
+      const container = document.getElementById('news-feed');
+      container.innerHTML = threats.map(t => `
+        <div class="flex gap-3 border-l-4 border-red-500 pl-4 py-1 hover:bg-yellow-400/10 transition-colors">
+          <span class="text-red-500 text-xl">⚠</span><p>${t}</p>
+        </div>
+      `).join('');
+    }
+
+    function refreshNews() {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+      renderNews();
+    }
+
+    window.onload = () => {
+      animateClock();
+      renderNews();
+      setInterval(() => { if (Math.random() > 0.7) confetti({ particleCount: 50, spread: 50, colors: ['#ff0000', '#ffcc00'] }); }, 7000);
+    };
+  </script>
+</body>
+</html>
